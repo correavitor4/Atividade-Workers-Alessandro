@@ -33,6 +33,9 @@
                     worker[j].onmessage = event =>{
                         result.textContent = event.data;
                         console.log('Got: ' + event.data + '\n');
+                        worker.forEach(element => {
+                            element.postMessage('stop');
+                        });
                     }
 
             }

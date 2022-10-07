@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>   
+    <meta charset="UTF-8">
+    <title>Exercicio paralela 2</title>
+</head>
+<body>
+<form>
+    <div>
+        <label for="number">Quantos workers você quer?</label>
+        <input type="number" id="number" value="1" min="1" max="26" onkeydown="return false">
+    </div>
+    <div>
+        <label for="text">Hash</label>
+        <input type="text" id="text" size="80">
+    </div>
+    <div>
+        <input type="submit">
+    </div>
+</form>
+<p id="result"></p>
+<script language="javascript">
+        var form = document.querySelector('form');
+        var workers = document.querySelector('input[type="number"]');
+        var hash = document.querySelector('input[type="text"]');
+        var result = document.querySelector('p#result');
+        form.onsubmit = e =>{
+            e.preventDefault();
+            let worker = [];
+            const array = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+            for(let j = 0;j<parseInt(workers.value);j++){
+                    worker.push(new Worker('worker.js'));
+                    worker[j].onmessage = event =>{
+                        result.textContent = event.data;
+                        console.log('Got: ' + event.data + '\n');
+                    }
+
+            }
+            let i = 0;
+            let j = 0;
+            while(i<array.length){
+                worker[j].postMessage([hash.value,array[i]]);
+                i++;
+                j= ++j % worker.length;
+            }
+
+            hash.value = '';
+            result.textContent = "Calculando...";
+        }
+</script>
+</body>
+</html>
